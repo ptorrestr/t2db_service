@@ -5,4 +5,5 @@ from searchrests.models import Searchrest, LANGUAGE_CHOICES, STYLE_CHOICES
 class SearchrestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Searchrest
-        fields = ('id', 'title', 'code', 'linenos', 'language', 'style')
+        fields = ('id', 'search_id', 'query', 'consumer', 'consumer_secret',
+                'access', 'access_secret', 'linenos', 'language', 'style')
