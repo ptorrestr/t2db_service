@@ -126,6 +126,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'rest_framework',
     'searchrests',
+    'daemon_connector',
 )
 
 # A sample logging configuration. The only tangible logging
