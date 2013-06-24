@@ -5,7 +5,7 @@ class DictionaryArgument(object):
     def __init__(self):
         self.lan = {"consumer":"_consumer", "consumer_secret" : "_consumer_sec",
                 "access":"_access", "access_secret":"_access_sec",
-                "query":"_query", "search_id":"_process_id"}
+                "query":"_query", "id":"_process_id"}
 
     def getTranslation(self, word):
         return self.lan[word]

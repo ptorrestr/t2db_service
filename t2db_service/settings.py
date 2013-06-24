@@ -125,7 +125,8 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'rest_framework',
-    'searchrests',
+    #'searchrests',
+    'tweets',
     'daemon_connector',
 )
 
