@@ -1,8 +1,30 @@
-from tweets.models import Tweet, Search, TweetSearch
-from tweets.serializers import TweetSerializer, SearchSerializer, TweetSearchSerializer
+from tweets.models import User, Tweet, Search, TweetSearch
+from tweets.serializers import UserSerializer
+from tweets.serializers import TweetSerializer
+from tweets.serializers import SearchSerializer
+from tweets.serializers import TweetSearchSerializer
 from rest_framework import generics
 from rest_framework.response import Response
 from daemon_connector.interface import DaemonSearch
+
+###### User ######
+class UserList(generics.ListCreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+#Used only to send default paramaters
+class UserNew(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def get(self, request, *args, **kwargs):
+        user_first = User()
+        serializer = UserSerializer(user_first)
+        return Response(serializer.data)
+
+class UserDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 ###### Tweet ######
 class TweetList(generics.ListCreateAPIView):
@@ -74,7 +96,8 @@ class TweetSearchList(generics.ListCreateAPIView):
         tweet_id = self.request.QUERY_PARAMS.get('tweet_id', None)
         if search_id is not None:
             if tweet_id is not None:
-                queryset = queryset.filter(search_id = search_id, tweet_id = tweet_id)
+                queryset = queryset.filter(search_id = search_id,
+                                         tweet_id = tweet_id)
             else:
                 #return only the last 10 tweets id
                 queryset = queryset.order_by('-created').filter(search_id = search_id)[:10]

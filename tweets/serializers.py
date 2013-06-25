@@ -1,6 +1,40 @@
 from django.forms import widgets
 from rest_framework import serializers
-from tweets.models import Tweet, Search, TweetSearch, LANGUAGE_CHOICES, STYLE_CHOICES
+from tweets.models import User, Tweet, Search, TweetSearch 
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id',
+                'created_at',
+                'name',
+                'screen_name',
+                'location',
+                'description',
+                'profile_image_url',
+                'profile_image_url_https',
+                'profile_background_tile',
+                'profile_background_image_url',
+                'profile_background_color',
+                'profile_sidebar_fill_color',
+                'profile_sidebar_border_color',
+                'profile_link_color',
+                'profile_text_color',
+                'protected',
+                'utc_offset',
+                'time_zone',
+                'followers_count',
+                'friends_count',
+                'statuses_count',
+                'favourites_count',
+                'url',
+                'geo_enabled',
+                'verified',
+                'lang',
+                'notifications',
+                'contributors_enabled',
+                'listed_count',
+                'linenos', 'language', 'style')
 
 class TweetSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,7 +58,6 @@ class TweetSerializer(serializers.ModelSerializer):
                 'retweeted',
                 'retweet_count',
                 'user_id',
-                'user_name', 
                 'linenos', 'language', 'style')
 
 class SearchSerializer(serializers.ModelSerializer):
@@ -34,7 +67,9 @@ class SearchSerializer(serializers.ModelSerializer):
                 'query', 
                 'consumer', 
                 'consumer_secret',
-                'access', 'access_secret', 'linenos', 'language', 'style')
+                'access',
+                'access_secret',
+                'linenos', 'language', 'style')
 
 class TweetSearchSerializer(serializers.ModelSerializer):
     class Meta:
