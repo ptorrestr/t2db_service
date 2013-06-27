@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, url
+from django.conf.urls import include
 from rest_framework.urlpatterns import format_suffix_patterns
 from tweets import views
 
@@ -19,6 +20,10 @@ urlpatterns = patterns('',
     url(r'^tweetsearches$', views.TweetSearchList.as_view()),
     url(r'^tweetsearches/new$', views.TweetSearchNew.as_view()),    
     url(r'^tweetsearches/(?P<pk>[0-9]+)$', views.TweetSearchDetail.as_view()),
+
+    #Authentication by browser
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+
 )
 
 urlpatterns = format_suffix_patterns(urlpatterns)

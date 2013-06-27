@@ -5,17 +5,20 @@ from tweets.serializers import SearchSerializer
 from tweets.serializers import TweetSearchSerializer
 from rest_framework import generics
 from rest_framework.response import Response
+from rest_framework import permissions
 from daemon_connector.interface import DaemonSearch
 
 ###### User ######
 class UserList(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 #Used only to send default paramaters
 class UserNew(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get(self, request, *args, **kwargs):
         user_first = User()
@@ -25,16 +28,19 @@ class UserNew(generics.RetrieveAPIView):
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 ###### Tweet ######
 class TweetList(generics.ListCreateAPIView):
     queryset = Tweet.objects.all()
     serializer_class = TweetSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 #Used only to send default parameters
 class TweetNew(generics.RetrieveAPIView):
     queryset = Tweet.objects.all()
     serializer_class = TweetSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get(self, request, *args, **kwargs):
         tweet_first = Tweet()
@@ -44,6 +50,7 @@ class TweetNew(generics.RetrieveAPIView):
 class TweetDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Tweet.objects.all()
     serializer_class = TweetSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 
 ###### Search ######
@@ -51,6 +58,7 @@ class TweetDetail(generics.RetrieveUpdateDestroyAPIView):
 class SearchList(generics.ListCreateAPIView):
     queryset = Search.objects.all()
     serializer_class = SearchSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def post(self, request, *args, **kwargs):
         daemonSearch = DaemonSearch()
@@ -61,6 +69,7 @@ class SearchList(generics.ListCreateAPIView):
 class SearchNew(generics.RetrieveAPIView):
     queryset = Search.objects.all()
     serializer_class = SearchSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get(self, request, *args, **kwargs):
         search_first = Search()
@@ -71,6 +80,7 @@ class SearchNew(generics.RetrieveAPIView):
 class SearchDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Search.objects.all()
     serializer_class = SearchSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def delete(self, request, *args, **kwargs):
         daemonSearch = DaemonSearch()
@@ -85,6 +95,7 @@ class SearchDetail(generics.RetrieveUpdateDestroyAPIView):
 class TweetSearchList(generics.ListCreateAPIView):
     queryset = TweetSearch.objects.all()
     serializer_class = TweetSearchSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get_queryset(self):
         """
@@ -106,6 +117,7 @@ class TweetSearchList(generics.ListCreateAPIView):
 class TweetSearchNew(generics.RetrieveAPIView):
     queryset = TweetSearch.objects.all()
     serializer_class = TweetSearchSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     
     def get(self, request, *args, **kwargs):
         tweetsearch_first = TweetSearch()
@@ -115,3 +127,4 @@ class TweetSearchNew(generics.RetrieveAPIView):
 class TweetSearchDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = TweetSearch.objects.all()
     serializer_class = TweetSearchSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)

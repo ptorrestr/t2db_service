@@ -17,40 +17,53 @@ class User(models.Model):
                             max_length = 200)
     screen_name = models.CharField(max_length = 200,
                             default = "screen name")
-    location = models.CharField(max_length = 200,
+    location = models.CharField(blank = True,
+                            max_length = 200,
                             default = "location")
-    description = models.CharField(max_length = 200,
+    description = models.CharField(blank = True,
+                            max_length = 200,
                             default = "description")
-    profile_image_url = models.CharField(max_length = 1024,
+    profile_image_url = models.CharField(blank = True,
+                            max_length = 1024,
                             default = "profile image url")
-    profile_image_url_https = models.CharField(max_length = 1024,
+    profile_image_url_https = models.CharField(blank = True,
+                            max_length = 1024,
                             default = "profile image url https")
     profile_background_tile = models.IntegerField(default = 0)
-    profile_background_image_url = models.CharField(max_length = 1024,
+    profile_background_image_url = models.CharField(blank = True,
+                            max_length = 1024,
                             default = "profile background image url")
-    profile_background_color = models.CharField(max_length = 200,
+    profile_background_color = models.CharField(blank = True,
+                            max_length = 200,
                             default = "profile background color")
-    profile_sidebar_fill_color = models.CharField(max_length = 200,
+    profile_sidebar_fill_color = models.CharField(blank = True,
+                            max_length = 200,
                             default = "profile sidebar fill color")
-    profile_sidebar_border_color = models.CharField(max_length = 200,
+    profile_sidebar_border_color = models.CharField(blank = True,
+                            max_length = 200,
                             default = "profile sidebar border color")
-    profile_link_color = models.CharField(max_length = 200,
+    profile_link_color = models.CharField(blank = True,
+                            max_length = 200,
                             default = "profile link color")
-    profile_text_color = models.CharField(max_length = 200,
+    profile_text_color = models.CharField(blank = True,
+                            max_length = 200,
                             default = "profile text color")
     protected = models.IntegerField(default = 0)
     utc_offset = models.IntegerField(default = 0)
-    time_zone = models.CharField(max_length = 200,
+    time_zone = models.CharField(blank = True,
+                            max_length = 200,
                             default = "time zone")
     followers_count = models.IntegerField(default = 0)
     friends_count = models.IntegerField(default = 0)
     statuses_count = models.IntegerField(default = 0)
     favourites_count = models.IntegerField(default = 0)
-    url = models.CharField(max_length = 200,
+    url = models.CharField(blank = True,
+                            max_length = 200,
                             default = "url")
     geo_enabled = models.IntegerField(default = 0)
     verified = models.IntegerField(default = 0)
-    lang = models.CharField(max_length = 200,
+    lang = models.CharField(blank = True,
+                            max_length = 200,
                             default = "lang")
     notifications = models.IntegerField(default = 0)
     contributors_enabled = models.IntegerField(default = 0)
@@ -85,28 +98,39 @@ class Tweet(models.Model):
     #Some tweets have more than 140?...
     text = models.CharField(blank = False, max_length = 200,
                             default = "text") 
-    in_reply_to_screen_name = models.CharField(max_length = 100,
+    in_reply_to_screen_name = models.CharField(blank = True,
+                            max_length = 200,
                             default = "in reply to screen name")
-    in_reply_to_user_id = models.CharField(max_length = 100,
+    in_reply_to_user_id = models.CharField(blank = True,
+                            max_length = 200,
                             default = "in reply to user id")
-    in_reply_to_status_id = models.CharField(max_length = 100,
+    in_reply_to_status_id = models.CharField(blank = True,
+                            max_length = 200,
                             default = "in reply to status id")
     truncated = models.IntegerField(default = 0)
-    source = models.CharField(max_length = 100,
+    source = models.CharField(blank = True,
+                            max_length = 200,
                             default = "source")
-    urls = models.CharField(max_length = 200,
+    urls = models.CharField(blank = True,
+                            max_length = 200,
                             default = "urls")
-    user_mentions = models.CharField(max_length = 100,
+    user_mentions = models.CharField(blank = True,
+                            max_length = 200,
                             default = "user_mentions")
-    hashtags = models.CharField(max_length = 200,
+    hashtags = models.CharField(blank = True,
+                            max_length = 200,
                             default = "hashtags")
-    geo = models.CharField(max_length = 100,
+    geo = models.CharField(blank = True,
+                            max_length = 200,
                             default = "geo")
-    place = models.CharField(max_length = 100,
+    place = models.CharField(blank = True,
+                            max_length = 200,
                             default = "place")
-    coordinates = models.CharField(max_length = 100,
+    coordinates = models.CharField(blank = True,
+                            max_length = 200,
                             default = "coordinates")
-    contributors = models.CharField(max_length = 100,
+    contributors = models.CharField(blank = True,
+                            max_length = 200,
                             default = "contributors")
     retweeted = models.IntegerField(default = 0)
     retweet_count = models.IntegerField(default = 0)

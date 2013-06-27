@@ -29,11 +29,23 @@ ALLOWED_HOSTS = []
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
 # In a Windows environment this must be set to your system time zone.
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = 'Europe/Dublin'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-ie'
+
+# SSL/HTTP
+#SESSION_COOKIE_SECURE = True
+#SECURE_HSTS_SECONDS = 5
+#SECURE_SSL_REDIRECT = True
+#SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+#SECURE_FRAME_DENY = True
+#SECURE_CONTENT_TYPE_NOSNIFF = True
+#SECURE_BROWSER_XSS_FILTER = True
+
+#CSRF_COOKIE_SECURE = True
+
 
 SITE_ID = 1
 
@@ -93,13 +105,15 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    #'djangosecure.middleware.SecurityMiddleware',
+    #'sslify.middleware.SSLifyMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
-    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
 ROOT_URLCONF = 't2db_service.urls'
@@ -127,6 +141,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'tweets',
     'daemon_connector',
+    #'djangosecure',
 )
 
 # A sample logging configuration. The only tangible logging
