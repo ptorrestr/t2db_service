@@ -10,7 +10,7 @@ STYLE_CHOICES = sorted((item, item) for item in get_all_styles())
 class User(models.Model):
     created = models.DateTimeField(auto_now_add = True)
 
-    id = models.IntegerField(primary_key = True)
+    id = models.BigIntegerField(primary_key = True)
     created_at = models.CharField(blank = False,
                             max_length = 200)
     name = models.CharField(blank = False,
@@ -91,7 +91,7 @@ class Tweet(models.Model):
     #db_index: Create an index in the database for the field
     #unique: Cannot be two search_id with the same value
     #max_length: Maximum string size
-    id = models.IntegerField(primary_key = True)
+    id = models.BigIntegerField(primary_key = True)
     created_at = models.CharField(blank = False, max_length=100,
                             default = "created at")
     favorited = models.IntegerField(default = 0)
@@ -157,7 +157,7 @@ class Search(models.Model):
     #db_index: Create an index in the database for the field
     #unique: Cannot be two search_id with the same value
     #max_length: Maximum string size
-    id = models.IntegerField(primary_key=True)
+    id = models.BigIntegerField(primary_key = True)
     query = models.CharField(max_length = 140,
                             blank = False)
     consumer = models.CharField(max_length=100,
