@@ -36,6 +36,19 @@ class TweetList(generics.ListCreateAPIView):
     serializer_class = TweetSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
+    def get_queryset(self):
+        queryset = Tweet.objects.all()
+        search_id = self.request.QUERY_PARAMS.get('search_id', None)
+        last = self.request.QUERY_PARAMS.get('last', None)
+        if search_id is not None:
+            if last is not None:
+                #Return the last 10 tweets
+                queryset = queryset.filter(tweetSearch__search_id = search_id)[:10]
+            else:
+                #Return all tweets
+                queryset = queryset.filter(tweetSearch__search_id = search_id)
+        return queryset
+
 #Used only to send default parameters
 class TweetNew(generics.RetrieveAPIView):
     queryset = Tweet.objects.all()
@@ -98,17 +111,13 @@ class TweetSearchList(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get_queryset(self):
-        """
-        Optionally restricts the returned purchases to a given user,
-        by filtering against a `username` query parameter in the URL.
-        """
         queryset = TweetSearch.objects.all()
         search_id = self.request.QUERY_PARAMS.get('search_id', None)
         tweet_id = self.request.QUERY_PARAMS.get('tweet_id', None)
         if search_id is not None:
             if tweet_id is not None:
                 queryset = queryset.filter(search_id = search_id,
-                                         tweet_id = tweet_id)
+                                     tweet_id = tweet_id)
             else:
                 #return only the last 10 tweets id
                 queryset = queryset.order_by('-created').filter(search_id = search_id)[:10]
@@ -128,3 +137,12 @@ class TweetSearchDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = TweetSearch.objects.all()
     serializer_class = TweetSearchSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+##### SetTweet #####
+#class TweetSearchDetail(generics.RetrieveAPIView):
+#    queryset = Tweet.objects.all()
+#    seralizer_class = TweetSerializer
+#    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+#
+#    def get(self, request, *args, **kwargs):
+#        se

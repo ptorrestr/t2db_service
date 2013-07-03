@@ -2,7 +2,67 @@ from django.forms import widgets
 from rest_framework import serializers
 from tweets.models import User, Tweet, Search, TweetSearch 
 
+class TweetSearchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TweetSearch
+        fields = ('id', 
+                'tweet',
+                'search',
+                )
+
+class TweetSerializer(serializers.ModelSerializer):
+    tweetSearch = TweetSearchSerializer(
+        many = True,
+        read_only = True,
+    )
+
+    class Meta:
+        model = Tweet
+        fields = ('id', 
+                'created_at',
+                'favorited',
+                'text',
+                'in_reply_to_screen_name',
+                'in_reply_to_user_id',
+                'in_reply_to_status_id',
+                'truncated',
+                'source',
+                'urls',
+                'user_mentions',
+                'hashtags',
+                'geo',
+                'place',
+                'coordinates',
+                'contributors',
+                'retweeted',
+                'retweet_count',
+                'user',
+                'tweetSearch',
+                )
+
+class SearchSerializer(serializers.ModelSerializer):
+    tweetSearch = TweetSearchSerializer(
+        many = True,
+        read_only = True,
+    )
+
+    class Meta:
+        model = Search
+        fields = ('id', 
+                'query', 
+                'consumer', 
+                'consumer_secret',
+                'access',
+                'access_secret',
+                'tweetSearch',
+                )
+
 class UserSerializer(serializers.ModelSerializer):
+    tweet = TweetSerializer(
+        many = True,
+        read_only = True,
+    )
+
     class Meta:
         model = User
         fields = ('id',
@@ -34,47 +94,5 @@ class UserSerializer(serializers.ModelSerializer):
                 'notifications',
                 'contributors_enabled',
                 'listed_count',
-                'linenos', 'language', 'style')
-
-class TweetSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Tweet
-        fields = ('id', 
-                'created_at',
-                'favorited',
-                'text',
-                'in_reply_to_screen_name',
-                'in_reply_to_user_id',
-                'in_reply_to_status_id',
-                'truncated',
-                'source',
-                'urls',
-                'user_mentions',
-                'hashtags',
-                'geo',
-                'place',
-                'coordinates',
-                'contributors',
-                'retweeted',
-                'retweet_count',
-                'user_id',
-                'linenos', 'language', 'style')
-
-class SearchSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Search
-        fields = ('id', 
-                'query', 
-                'consumer', 
-                'consumer_secret',
-                'access',
-                'access_secret',
-                'linenos', 'language', 'style')
-
-class TweetSearchSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TweetSearch
-        fields = ('id', 
-                'tweet_id',
-                'search_id', 
+                'tweet',
                 'linenos', 'language', 'style')

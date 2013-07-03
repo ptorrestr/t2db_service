@@ -136,16 +136,7 @@ class Tweet(models.Model):
     retweet_count = models.IntegerField(default = 0)
 
     #Foreign Key
-    user_id = models.ForeignKey(User)
-    
-    #Find for what rason this values must be added?    
-    linenos = models.BooleanField(default=False)
-    language = models.CharField(choices=LANGUAGE_CHOICES,
-                            default='python',
-                            max_length=100)
-    style = models.CharField(choices=STYLE_CHOICES,
-                            default='friendly',
-                            max_length=100)
+    user = models.ForeignKey(User, related_name = 'tweet')
 
     class Meta:
         ordering = ('created',)
@@ -170,15 +161,6 @@ class Search(models.Model):
                             blank = False)
 
     #Foreign Key
-    
-    #Find for what rason this values must be added?    
-    linenos = models.BooleanField(default=False)
-    language = models.CharField(choices=LANGUAGE_CHOICES,
-                            default='python',
-                            max_length=100)
-    style = models.CharField(choices=STYLE_CHOICES,
-                            default='friendly',
-                            max_length=100)
 
     class Meta:
         ordering = ('created',)
@@ -192,17 +174,9 @@ class TweetSearch(models.Model):
     #max_length: Maximum string size
 
     #Foreign Key 
-    tweet_id = models.ForeignKey(Tweet)
-    search_id = models.ForeignKey(Search)
+    tweet = models.ForeignKey(Tweet, related_name = 'tweetSearch')
+    search = models.ForeignKey(Search, related_name = 'tweetSearch')
 
-    #Find for what rason this values must be added?    
-    linenos = models.BooleanField(default=False)
-    language = models.CharField(choices=LANGUAGE_CHOICES,
-                            default='python',
-                            max_length=100)
-    style = models.CharField(choices=STYLE_CHOICES,
-                            default='friendly',
-                            max_length=100)
 
     class Meta:
         ordering = ('created',)

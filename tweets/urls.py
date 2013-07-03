@@ -21,6 +21,8 @@ urlpatterns = patterns('',
     url(r'^tweetsearches/new$', views.TweetSearchNew.as_view()),    
     url(r'^tweetsearches/(?P<pk>[0-9]+)$', views.TweetSearchDetail.as_view()),
 
+    #url(r'^settweets/(?P<pk>[0-9]+)$', views.SetTweetDetail.as_view()),
+
     #Authentication by browser
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
