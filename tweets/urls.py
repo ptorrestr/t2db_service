@@ -17,6 +17,10 @@ urlpatterns = patterns('',
     url(r'^searches/new$', views.SearchNew.as_view()),
     url(r'^searches/(?P<pk>[0-9]+)$', views.SearchDetail.as_view()),
 
+    url(r'^searchruns$', views.SearchRunList.as_view()),
+    url(r'^searchruns/new$', views.SearchRunNew.as_view()),
+    url(r'^searchruns/(?P<pk>[0-9]+)$', views.SearchRunDetail.as_view()),
+
     url(r'^tweetsearches$', views.TweetSearchList.as_view()),
     url(r'^tweetsearches/new$', views.TweetSearchNew.as_view()),    
     url(r'^tweetsearches/(?P<pk>[0-9]+)$', views.TweetSearchDetail.as_view()),

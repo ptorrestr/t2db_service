@@ -142,7 +142,7 @@ class Tweet(models.Model):
         ordering = ('created',)
 
 class Search(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add = True)
     
     #blank: The value could not be empty
     #db_index: Create an index in the database for the field
@@ -159,11 +159,20 @@ class Search(models.Model):
                             blank = False)
     access_secret = models.CharField(max_length = 100,
                             blank = False)
-
-    #Foreign Key
+    lastpause = models.DateTimeField(null = True)
 
     class Meta:
         ordering = ('created',)
+
+class SearchRun(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+
+    #Foreign Key
+    search = models.ForeignKey(Search, 
+                            related_name = 'searchrun')
+    class Meta:
+        ordering = ('created',)
+
 
 class TweetSearch(models.Model):
     created = models.DateTimeField(auto_now_add=True)
@@ -176,7 +185,6 @@ class TweetSearch(models.Model):
     #Foreign Key 
     tweet = models.ForeignKey(Tweet, related_name = 'tweetSearch')
     search = models.ForeignKey(Search, related_name = 'tweetSearch')
-
 
     class Meta:
         ordering = ('created',)

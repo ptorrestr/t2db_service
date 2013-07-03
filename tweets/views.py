@@ -1,7 +1,8 @@
-from tweets.models import User, Tweet, Search, TweetSearch
+from tweets.models import User, Tweet, Search, SearchRun, TweetSearch
 from tweets.serializers import UserSerializer
 from tweets.serializers import TweetSerializer
 from tweets.serializers import SearchSerializer
+from tweets.serializers import SearchRunSerializer
 from tweets.serializers import TweetSearchSerializer
 from rest_framework import generics
 from rest_framework.response import Response
@@ -65,18 +66,12 @@ class TweetDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TweetSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
-
 ###### Search ######
 # We override create to allow creation of job in t2db daemon
 class SearchList(generics.ListCreateAPIView):
     queryset = Search.objects.all()
     serializer_class = SearchSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-
-    def post(self, request, *args, **kwargs):
-        daemonSearch = DaemonSearch()
-        daemonSearch.newEntry(request.DATA)
-        return self.create(request, *args, **kwargs)
 
 #Used only to send default parameters
 class SearchNew(generics.RetrieveAPIView):
@@ -95,15 +90,42 @@ class SearchDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = SearchSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
-    def delete(self, request, *args, **kwargs):
-        daemonSearch = DaemonSearch()
-        key = kwargs["pk"]
-        search = Search.objects.get(pk=key)
+##### SearchRun ######
+class SearchRunList(generics.ListCreateAPIView):
+    queryset = SearchRun.objects.all()
+    serializer_class = SearchRunSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def post(self, request, *args, **kwargs):
+        search_id = request.DATA["search"]
+        search = Search.objects.get(pk = search_id)
         serializer = SearchSerializer(search)
-        daemonSearch.deleteEntry(serializer.data)
-        #TODO: Don't destroy search in database, add running attribute
+        DaemonSearch().newEntry(serializer.data)
+        return self.create(request, *args, **kwargs)
+
+class SearchRunNew(generics.RetrieveAPIView):
+    queryset = SearchRun.objects.all()
+    serializer_class = SearchRunSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def get(self, request, *args, **kwargs):
+        searchrun_first = SearchRun()
+        serializer = SearchRunSerializer(searchrun_first)
+        return Response(serializer.data)
+
+class SearchRunDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = SearchRun.objects.all()
+    serializer_class = SearchRunSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def delete(self, request, *args, **kwargs):
+        key = kwargs["pk"]
+        searchrun = SearchRun.objects.get(pk = key)
+        search = Search.objects.get(pk = searchrun.search.id)
+        serializer = SearchSerializer(search)
+        DaemonSearch().deleteEntry(serializer.data)
         return self.destroy(request, *args, **kwargs)
-        
+
 ##### TweetSearch ######
 class TweetSearchList(generics.ListCreateAPIView):
     queryset = TweetSearch.objects.all()

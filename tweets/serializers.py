@@ -1,6 +1,6 @@
 from django.forms import widgets
 from rest_framework import serializers
-from tweets.models import User, Tweet, Search, TweetSearch 
+from tweets.models import User, Tweet, Search, SearchRun, TweetSearch 
 
 class TweetSearchSerializer(serializers.ModelSerializer):
     class Meta:
@@ -40,9 +40,20 @@ class TweetSerializer(serializers.ModelSerializer):
                 'tweetSearch',
                 )
 
+class SearchRunSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SearchRun
+        fields = ('id',
+                'search',
+                )
+
 class SearchSerializer(serializers.ModelSerializer):
     tweetSearch = TweetSearchSerializer(
         many = True,
+        read_only = True,
+    )
+
+    searchrun = SearchRunSerializer(
         read_only = True,
     )
 
@@ -55,6 +66,7 @@ class SearchSerializer(serializers.ModelSerializer):
                 'access',
                 'access_secret',
                 'tweetSearch',
+                'searchrun',
                 )
 
 class UserSerializer(serializers.ModelSerializer):
