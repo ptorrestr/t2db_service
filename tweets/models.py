@@ -159,8 +159,6 @@ class Search(models.Model):
                             blank = False)
     access_secret = models.CharField(max_length = 100,
                             blank = False)
-    lastpause = models.DateTimeField(null = True)
-
     class Meta:
         ordering = ('created',)
 
@@ -185,6 +183,53 @@ class TweetSearch(models.Model):
     #Foreign Key 
     tweet = models.ForeignKey(Tweet, related_name = 'tweetSearch')
     search = models.ForeignKey(Search, related_name = 'tweetSearch')
+
+    class Meta:
+        ordering = ('created',)
+
+class Streaming(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    
+    #blank: The value could not be empty
+    #db_index: Create an index in the database for the field
+    #unique: Cannot be two search_id with the same value
+    #max_length: Maximum string size
+    id = models.BigIntegerField(primary_key = True)
+    query = models.CharField(max_length = 140,
+                            blank = False)
+    consumer = models.CharField(max_length=100,
+                            blank = False)
+    consumer_secret = models.CharField(max_length = 100,
+                            blank = False)
+    access = models.CharField(max_length = 100,
+                            blank = False)
+    access_secret = models.CharField(max_length = 100,
+                            blank = False)
+
+    class Meta:
+        ordering = ('created',)
+
+class StreamingRun(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+
+    #Foreign Key
+    streaming = models.ForeignKey(Streaming, 
+                            related_name = 'streamingrun')
+    class Meta:
+        ordering = ('created',)
+
+
+class TweetStreaming(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    
+    #blank: The value could not be empty
+    #db_index: Create an index in the database for the field
+    #unique: Cannot be two search_id with the same value
+    #max_length: Maximum string size
+
+    #Foreign Key 
+    tweet = models.ForeignKey(Tweet, related_name = 'tweetStreaming')
+    streaming = models.ForeignKey(Streaming, related_name = 'tweetStreaming')
 
     class Meta:
         ordering = ('created',)

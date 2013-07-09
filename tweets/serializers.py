@@ -1,6 +1,13 @@
 from django.forms import widgets
 from rest_framework import serializers
-from tweets.models import User, Tweet, Search, SearchRun, TweetSearch 
+from tweets.models import User
+from tweets.models import Tweet
+from tweets.models import Search
+from tweets.models import SearchRun
+from tweets.models import TweetSearch
+from tweets.models import Streaming
+from tweets.models import StreamingRun
+from tweets.models import TweetStreaming 
 
 class TweetSearchSerializer(serializers.ModelSerializer):
     class Meta:
@@ -10,8 +17,21 @@ class TweetSearchSerializer(serializers.ModelSerializer):
                 'search',
                 )
 
+class TweetStreamingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TweetStreaming
+        fields = ('id',
+                'tweet',
+                'streaming',
+                )
+
 class TweetSerializer(serializers.ModelSerializer):
     tweetSearch = TweetSearchSerializer(
+        many = True,
+        read_only = True,
+    )
+
+    tweetStreaming = TweetStreamingSerializer(
         many = True,
         read_only = True,
     )
@@ -38,6 +58,7 @@ class TweetSerializer(serializers.ModelSerializer):
                 'retweet_count',
                 'user',
                 'tweetSearch',
+                'tweetStreaming',
                 )
 
 class SearchRunSerializer(serializers.ModelSerializer):
@@ -67,6 +88,35 @@ class SearchSerializer(serializers.ModelSerializer):
                 'access_secret',
                 'tweetSearch',
                 'searchrun',
+                )
+
+class StreamingRunSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StreamingRun
+        fields = ('id',
+                'streaming',
+                )
+
+class StreamingSerializer(serializers.ModelSerializer):
+    tweetStreaming = TweetStreamingSerializer(
+        many = True,
+        read_only = True,
+    )
+
+    searchrun = StreamingRunSerializer(
+        read_only = True,
+    )
+
+    class Meta:
+        model = Streaming
+        fields = ('id',
+                'query',
+                'consumer',
+                'consumer_secret',
+                'access',
+                'access_secret',
+                'tweetStreaming',
+                'streamingrun',
                 )
 
 class UserSerializer(serializers.ModelSerializer):

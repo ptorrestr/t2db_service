@@ -5,7 +5,7 @@ class DictionaryArgument(object):
     def __init__(self):
         self.lan = {"consumer":"_consumer", "consumer_secret" : "_consumer_sec",
                 "access":"_access", "access_secret":"_access_sec",
-                "query":"_query", "id":"_process_id"}
+                "query":"_query", "id":"_process_id", "kind":"_kind"}
 
     def getTranslation(self, word):
         return self.lan[word]
@@ -34,7 +34,8 @@ class DaemonConnection(object):
 
 class DaemonSearch(object):
    
-    def newEntry(self, data):
+    def newEntry(self, data, kind):
+        data["kind"] = kind
         args = DictionaryArgument().getArguments(data, "START")
         DaemonConnection().send(args)
     
@@ -46,6 +47,7 @@ class DaemonSearch(object):
         #TODO not implemented yet
         args = DictionaryArgument().getArguments(data, "POLL")
 
-    def deleteEntry(self, data):
+    def deleteEntry(self, data, kind):
+        data["kind"] = kind
         args = DictionaryArgument().getArguments(data, "DELETE")
         DaemonConnection().send(args)

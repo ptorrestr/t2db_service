@@ -25,7 +25,18 @@ urlpatterns = patterns('',
     url(r'^tweetsearches/new$', views.TweetSearchNew.as_view()),    
     url(r'^tweetsearches/(?P<pk>[0-9]+)$', views.TweetSearchDetail.as_view()),
 
-    #url(r'^settweets/(?P<pk>[0-9]+)$', views.SetTweetDetail.as_view()),
+    url(r'^streamings$', views.StreamingList.as_view()),
+    url(r'^streamings/new$', views.StreamingNew.as_view()),
+    url(r'^streamings/(?P<pk>[0-9]+)$', views.StreamingDetail.as_view()),
+
+    url(r'^streamingruns$', views.StreamingRunList.as_view()),
+    url(r'^streamingruns/new$', views.StreamingRunNew.as_view()),
+    url(r'^streamingruns/(?P<pk>[0-9]+)$', views.StreamingRunDetail.as_view()),
+
+    url(r'^tweetstreamings$', views.TweetStreamingList.as_view()),
+    url(r'^tweetstreamings/new$', views.TweetStreamingNew.as_view()),    
+    url(r'^tweetstreamings/(?P<pk>[0-9]+)$', views.TweetStreamingDetail.as_view()),
+
 
     #Authentication by browser
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),

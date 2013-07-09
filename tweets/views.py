@@ -1,9 +1,19 @@
-from tweets.models import User, Tweet, Search, SearchRun, TweetSearch
+from tweets.models import User
+from tweets.models import Tweet
+from tweets.models import Search
+from tweets.models import SearchRun
+from tweets.models import TweetSearch
+from tweets.models import Streaming
+from tweets.models import StreamingRun
+from tweets.models import TweetStreaming
 from tweets.serializers import UserSerializer
 from tweets.serializers import TweetSerializer
 from tweets.serializers import SearchSerializer
 from tweets.serializers import SearchRunSerializer
 from tweets.serializers import TweetSearchSerializer
+from tweets.serializers import StreamingSerializer
+from tweets.serializers import StreamingRunSerializer
+from tweets.serializers import TweetStreamingSerializer
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import permissions
@@ -40,14 +50,22 @@ class TweetList(generics.ListCreateAPIView):
     def get_queryset(self):
         queryset = Tweet.objects.all()
         search_id = self.request.QUERY_PARAMS.get('search_id', None)
+        streaming_id = self.request.QUERY_PARAMS.get('streaming_id', None)
         last = self.request.QUERY_PARAMS.get('last', None)
         if search_id is not None:
             if last is not None:
                 #Return the last 10 tweets
-                queryset = queryset.filter(tweetSearch__search_id = search_id)[:10]
+                queryset = queryset.order_by('-created').filter(tweetSearch__search_id = search_id)[:10]
             else:
                 #Return all tweets
                 queryset = queryset.filter(tweetSearch__search_id = search_id)
+        elif streaming_id is not None:
+            if last is not None:
+                #Return the last 10 tweets for streaming
+                queryset = queryset.order_by('-created').filter(tweetStreaming__streaming_id = streaming_id)[:10]
+            else:
+                #REturn all teets for streaming
+                queryset = queryset.filter(tweetStreaming__streaming_id = streaming_id)
         return queryset
 
 #Used only to send default parameters
@@ -96,11 +114,18 @@ class SearchRunList(generics.ListCreateAPIView):
     serializer_class = SearchRunSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
+    def get_queryset(self):
+        queryset = SearchRun.objects.all()
+        search_id = self.request.QUERY_PARAMS.get('search_id', None)
+        if search_id is not None:
+            queryset = queryset.filter(search = search_id)
+        return queryset
+
     def post(self, request, *args, **kwargs):
         search_id = request.DATA["search"]
         search = Search.objects.get(pk = search_id)
         serializer = SearchSerializer(search)
-        DaemonSearch().newEntry(serializer.data)
+        DaemonSearch().newEntry(serializer.data, "search")
         return self.create(request, *args, **kwargs)
 
 class SearchRunNew(generics.RetrieveAPIView):
@@ -123,7 +148,7 @@ class SearchRunDetail(generics.RetrieveUpdateDestroyAPIView):
         searchrun = SearchRun.objects.get(pk = key)
         search = Search.objects.get(pk = searchrun.search.id)
         serializer = SearchSerializer(search)
-        DaemonSearch().deleteEntry(serializer.data)
+        DaemonSearch().deleteEntry(serializer.data, "search")
         return self.destroy(request, *args, **kwargs)
 
 ##### TweetSearch ######
@@ -160,11 +185,102 @@ class TweetSearchDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TweetSearchSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
-##### SetTweet #####
-#class TweetSearchDetail(generics.RetrieveAPIView):
-#    queryset = Tweet.objects.all()
-#    seralizer_class = TweetSerializer
-#    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-#
-#    def get(self, request, *args, **kwargs):
-#        se
+###### Streaming ######
+class StreamingList(generics.ListCreateAPIView):
+    queryset = Streaming.objects.all()
+    serializer_class = StreamingSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+#Used only to send default parameters
+class StreamingNew(generics.RetrieveAPIView):
+    queryset = Streaming.objects.all()
+    serializer_class = StreamingSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def get(self, request, *args, **kwargs):
+        streaming_first = Streaming()
+        serializer = StreamingSerializer(streaming_first)
+        return Response(serializer.data)
+
+class StreamingDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Streaming.objects.all()
+    serializer_class = StreamingSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+##### StreamingRun ######
+class StreamingRunList(generics.ListCreateAPIView):
+    queryset = StreamingRun.objects.all()
+    serializer_class = StreamingRunSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def get_queryset(self):
+        queryset = StreamingRun.objects.all()
+        streaming_id = self.request.QUERY_PARAMS.get('streaming_id', None)
+        if streaming_id is not None:
+            queryset = queryset.filter(streaming = streaming_id)
+        return queryset
+
+    def post(self, request, *args, **kwargs):
+        streaming_id = request.DATA["streaming"]
+        streaming = Streaming.objects.get(pk = streaming_id)
+        serializer = StreamingSerializer(streaming)
+        DaemonSearch().newEntry(serializer.data, "streaming")
+        return self.create(request, *args, **kwargs)
+
+class StreamingRunNew(generics.RetrieveAPIView):
+    queryset = StreamingRun.objects.all()
+    serializer_class = StreamingRunSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def get(self, request, *args, **kwargs):
+        streamingrun_first = StreamingRun()
+        serializer = StreamingRunSerializer(streamingrun_first)
+        return Response(serializer.data)
+
+class StreamingRunDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = StreamingRun.objects.all()
+    serializer_class = StreamingRunSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def delete(self, request, *args, **kwargs):
+        key = kwargs["pk"]
+        streamingrun = StreamingRun.objects.get(pk = key)
+        streaming = Streaming.objects.get(pk = streamingrun.streaming.id)
+        serializer = StreamingSerializer(streaming)
+        DaemonSearch().deleteEntry(serializer.data, "streaming")
+        return self.destroy(request, *args, **kwargs)
+
+##### TweetStreaming ######
+class TweetStreamingList(generics.ListCreateAPIView):
+    queryset = TweetStreaming.objects.all()
+    serializer_class = TweetStreamingSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def get_queryset(self):
+        queryset = TweetStreaming.objects.all()
+        streaming_id = self.request.QUERY_PARAMS.get('streaming_id', None)
+        tweet_id = self.request.QUERY_PARAMS.get('tweet_id', None)
+        if streaming_id is not None:
+            if tweet_id is not None:
+                queryset = queryset.filter(streaming_id = streaming_id,
+                                     tweet_id = tweet_id)
+            else:
+                #return only the last 10 tweets id
+                queryset = queryset.order_by('-created').filter(streaming_id = streaming_id)[:10]
+        return queryset
+
+class TweetStreamingNew(generics.RetrieveAPIView):
+    queryset = TweetStreaming.objects.all()
+    serializer_class = TweetStreamingSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    
+    def get(self, request, *args, **kwargs):
+        tweetstreaming_first = TweetStreaming()
+        serializer = TweetStreamingSerializer(tweetstreaming_first)
+        return Response(serializer.data)
+
+class TweetStreamingDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = TweetStreaming.objects.all()
+    serializer_class = TweetStreamingSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
