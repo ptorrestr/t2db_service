@@ -17,6 +17,7 @@ from tweets.serializers import TweetStreamingSerializer
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import permissions
+from rest_framework import status
 from daemon_connector.interface import DaemonSearch
 
 ###### User ######
@@ -24,6 +25,14 @@ class UserList(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def post(self, request, *args, **kwargs):
+        serializer = UserSerializer(User.objects.all(), many = True,
+            data = request.DATA, allow_add_remove = True)
+        if serializer.is_valid():
+            [serializer.save_object(item) for item in serializer.object]
+            return Response(status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 #Used only to send default paramaters
 class UserNew(generics.RetrieveAPIView):
@@ -46,6 +55,14 @@ class TweetList(generics.ListCreateAPIView):
     queryset = Tweet.objects.all()
     serializer_class = TweetSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def post(self, request, *args, **kwargs):
+        serializer = TweetSerializer(Tweet.objects.all(), many = True,
+            data = request.DATA, allow_add_remove = True)
+        if serializer.is_valid():
+            [serializer.save_object(item) for item in serializer.object]
+            return Response(status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get_queryset(self):
         queryset = Tweet.objects.all()
@@ -90,6 +107,14 @@ class SearchList(generics.ListCreateAPIView):
     queryset = Search.objects.all()
     serializer_class = SearchSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def post(self, request, *args, **kwargs):
+        serializer = SearchSerializer(Search.objects.all(), many = True, 
+            data = request.DATA, allow_add_remove = True)        
+        if serializer.is_valid():
+            [serializer.save_object(item) for item in serializer.object]
+            return Response(status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 #Used only to send default parameters
 class SearchNew(generics.RetrieveAPIView):
@@ -157,6 +182,14 @@ class TweetSearchList(generics.ListCreateAPIView):
     serializer_class = TweetSearchSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
+    def post(self, request, *args, **kwargs):
+        serializer = TweetSearchSerializer(TweetSearch.objects.all(), many = True, 
+            data = request.DATA, allow_add_remove = True)        
+        if serializer.is_valid():
+            [serializer.save_object(item) for item in serializer.object]
+            return Response(status=status.HTTP_200_OK)
+        Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def get_queryset(self):
         queryset = TweetSearch.objects.all()
         search_id = self.request.QUERY_PARAMS.get('search_id', None)
@@ -190,6 +223,14 @@ class StreamingList(generics.ListCreateAPIView):
     queryset = Streaming.objects.all()
     serializer_class = StreamingSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def post(self, request, *args, **kwargs):
+        serializer = StreamingSerializer(Streaming.objects.all(), many = True, 
+            data = request.DATA, allow_add_remove = True)        
+        if serializer.is_valid():
+            [serializer.save_object(item) for item in serializer.object]
+            return Response(status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 #Used only to send default parameters
 class StreamingNew(generics.RetrieveAPIView):
@@ -255,6 +296,14 @@ class TweetStreamingList(generics.ListCreateAPIView):
     queryset = TweetStreaming.objects.all()
     serializer_class = TweetStreamingSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def post(self, request, *args, **kwargs):
+        serializer = TweetStreamingSerializer(TweetStreaming.objects.all(), many = True, 
+            data = request.DATA, allow_add_remove = True)        
+        if serializer.is_valid():
+            [serializer.save_object(item) for item in serializer.object]
+            return Response(status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get_queryset(self):
         queryset = TweetStreaming.objects.all()

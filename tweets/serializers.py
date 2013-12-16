@@ -28,12 +28,12 @@ class TweetStreamingSerializer(serializers.ModelSerializer):
 class TweetSerializer(serializers.ModelSerializer):
     tweetSearch = TweetSearchSerializer(
         many = True,
-        read_only = True,
+        required = False,
     )
 
     tweetStreaming = TweetStreamingSerializer(
         many = True,
-        read_only = True,
+        required = False,
     )
 
     class Meta:
@@ -50,7 +50,6 @@ class TweetSerializer(serializers.ModelSerializer):
                 'urls',
                 'user_mentions',
                 'hashtags',
-                'geo',
                 'place',
                 'coordinates',
                 'contributors',
@@ -128,6 +127,12 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id',
+                'utc_offset',
+                'followers_count',
+                'friends_count',
+                'statuses_count',
+                'favourites_count',
+                'listed_count',
                 'created_at',
                 'name',
                 'screen_name',
@@ -135,26 +140,20 @@ class UserSerializer(serializers.ModelSerializer):
                 'description',
                 'profile_image_url',
                 'profile_image_url_https',
-                'profile_background_tile',
                 'profile_background_image_url',
                 'profile_background_color',
                 'profile_sidebar_fill_color',
                 'profile_sidebar_border_color',
                 'profile_link_color',
                 'profile_text_color',
-                'protected',
-                'utc_offset',
                 'time_zone',
-                'followers_count',
-                'friends_count',
-                'statuses_count',
-                'favourites_count',
                 'url',
+                'lang',
+                'profile_background_tile',
+                'protected',
                 'geo_enabled',
                 'verified',
-                'lang',
                 'notifications',
                 'contributors_enabled',
-                'listed_count',
                 'tweet',
-                'linenos', 'language', 'style')
+                )
